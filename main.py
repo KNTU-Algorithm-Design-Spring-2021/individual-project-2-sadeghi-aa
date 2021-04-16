@@ -1,5 +1,13 @@
-# def result(break_points):
-#
+def formation(current, word_lengths, break_points, line_length):
+    strings = []
+    if current == break_points[current]:
+        for i in range(current + 1):
+            strings.append('|' * word_lengths[i])
+    else:
+        formation(break_points[current], word_lengths, break_points, line_length)
+        for i in range(break_points[current] + 1, current + 1):
+            strings.append('|' * word_lengths[i])
+    print('-'.join(strings) + '-' * (line_length - sum([len(s) for s in strings]) - (len(strings) - 1)))
 
 
 def word_wrap(word_lengths, line_length):
@@ -25,7 +33,7 @@ def word_wrap(word_lengths, line_length):
         break_points = [0]
     else:
         costs.append(partial_costs[0][0])
-        break_points = []
+        break_points = [0]
     for end_word in range(1, num_words):
         cur_cost = None
         if end_word != num_words - 1:
@@ -63,12 +71,15 @@ def word_wrap(word_lengths, line_length):
                         costs.append(cur_cost)
                         break_points.append(break_point)
 
+    print('Word Lengths:', word_lengths)
+    print('Breakpoints:', break_points)
     print('All Costs:', costs)
-    print('All Breakpoints:', break_points)
-    print('Final Cost:', costs[-1])
+    print('Final Cost:', costs[-1], '\n')
+    print('Paragraph formation:')
+    formation(num_words - 1, word_lengths, break_points, line_length)
 
 
-wordLengths = [9, 2, 5, 3]
+wordLengths = [2, 3, 2, 8, 6, 3, 3]
 lineLength = 10
 
 word_wrap(wordLengths, lineLength)
